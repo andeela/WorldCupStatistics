@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "awUFoNiLC7te9sL4yK9TpAIp7U4iz65c8ozm9y+5JX/+ItYPgBbvbR6boUmoyINFZpltaxAfryfllUkrtl2p/g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\anđela\\source\\repos\\OOP.NET\\WorldCupStatistics\\DAL\\DAL.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\anđela\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,4 @@
+Repository:FILE
+Language:ENGLISH
+Championship:MEN
+Resolution:FULLSCREEN
