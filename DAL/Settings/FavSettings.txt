@@ -1,2 +1,0 @@
-favouriteTeam:null
-favouritePlayers:null,null,null

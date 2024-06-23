@@ -12,34 +12,41 @@ namespace DAL.Repos
 {
     public class FavSettingsRepo : IFavSettingsRepo
     {
-        private const string SETTINGS_FILE_PATH = @"..\..\..\..\DAL\Settings\FavSettings.txt";
-        private const string SETTINGS_TEAM = "favouriteTeam";
-        private const string SETTINGS_PLAYERS = "favouritePlayers";
+        private const string SETTINGS_TEAM_FILE_PATH = @"..\..\..\..\DAL\Settings\fav_teams";
+        private const string SETTINGS_PLAYERS_FILE_PATH = @"..\..\..\..\DAL\Settings\fav_players.txt";
+        private const string DEFAULT_TEAM = "null";
+        private const string DEFAULT_PLAYER = "null";
 
-        public async Task<bool> CreateSettingsAsync() 
+        public async Task<bool> CreateSettingsAsync()
         {
-            if(!File.Exists(SETTINGS_FILE_PATH))
-            {
-                var settings = new List<string>
-                {
-                    $"{SETTINGS_TEAM}{Utilities.DELIMITER}null",
-                    $"{SETTINGS_PLAYERS}{Utilities.DELIMITER}{string.Join(Utilities.DELIMITER_LIST, Enumerable.Repeat(Player.DEAFULT_NAME, 3))}"
-                };
+            bool created = false;
 
-                await File.WriteAllLinesAsync(SETTINGS_FILE_PATH, settings);
-                return true;
+            if (!File.Exists(SETTINGS_TEAM_FILE_PATH))
+            {
+                await File.WriteAllTextAsync(SETTINGS_TEAM_FILE_PATH, DEFAULT_TEAM);
+                created = true;
             }
-            return false;
+
+            if (!File.Exists(SETTINGS_PLAYERS_FILE_PATH))
+            {
+                await File.WriteAllTextAsync(SETTINGS_PLAYERS_FILE_PATH, DEFAULT_PLAYER);
+                created = true;
+            }
+
+            return created;
         }
 
         public async Task<FavouriteSettings> GetSettingsAsync()
         {
             await CreateSettingsAsync(); // if they don't exist
-            var data = await File.ReadAllLinesAsync(SETTINGS_FILE_PATH);
+
+            var team = await File.ReadAllTextAsync(SETTINGS_TEAM_FILE_PATH);
+            var playersLine = await File.ReadAllTextAsync(SETTINGS_PLAYERS_FILE_PATH);
+
             var settings = new FavouriteSettings
             {
-                FavouriteTeam = await ParseFavTeamAsync(data[0]),
-                FavouritePlayers = await ParseFavPlayers(data[1])
+                FavouriteTeam = await ParseFavTeamAsync(team),
+                FavouritePlayers = await ParseFavPlayers(playersLine)
             };
 
             return settings;
@@ -51,41 +58,40 @@ namespace DAL.Repos
             var playerNames = Utilities.GetValuesFromLine(line);
             var players = await DataFactory.GetPlayersAsync();
 
-            foreach ( var playerName in playerNames ) {
+            foreach (var playerName in playerNames)
+            {
                 var player = players.FirstOrDefault(p => p.Name == playerName);
-                if ( player != null )
+                if (player != null)
                 {
                     favPlayers.Add(player);
                 }
-            }                
+            }
             return favPlayers;
         }
 
-        private async Task<NationalTeam> ParseFavTeamAsync(string line)
+        private async Task<NationalTeam> ParseFavTeamAsync(string value)
         {
+            if (value == DEFAULT_TEAM)
+            {
+                return null;
+            }
 
-            string value = Utilities.GetValueFromLine(line); 
             var settings = await DataFactory.GetAppSettingsAsync();
             var gender = settings.GenderCategory;
             var nationalTeams = await DataFactory.GetNationalTeamsAsync(gender);
             return nationalTeams.FirstOrDefault(t => t.Country == value);
         }
 
-        
-
         public async Task UpdateSettingsAsync(FavouriteSettings appSettings)
         {
             await CreateSettingsAsync(); // if they don't exist
 
-            var playersString = string.Join(Utilities.DELIMITER_LIST, appSettings.FavouritePlayers.Select(p => p.Name));
+            var playersString = string.Join(Environment.NewLine, appSettings.FavouritePlayers.Select(p => p.Name));
+            var teamString = appSettings.FavouriteTeam?.Country ?? DEFAULT_TEAM;
 
-            var settings = new List<string>
-            {
-                $"{SETTINGS_TEAM}{Utilities.DELIMITER}{appSettings.FavouriteTeam.Country}",
-                $"{SETTINGS_PLAYERS}{Utilities.DELIMITER}{playersString}"
-            };
-
-            await File.WriteAllLinesAsync(SETTINGS_FILE_PATH, settings);
+            await File.WriteAllTextAsync(SETTINGS_TEAM_FILE_PATH, teamString);
+            await File.WriteAllTextAsync(SETTINGS_PLAYERS_FILE_PATH, playersString);
         }
     }
 }
+

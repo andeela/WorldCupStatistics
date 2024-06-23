@@ -56,17 +56,13 @@ namespace DAL.Repos
         {
             if (string.IsNullOrEmpty(country))
             {
-                Debug.WriteLine("Country is null or empty.");
                 return new HashSet<Player>();
             }
 
             try
             {
                 var settings = await settingsRepository.GetSettingsAsync();
-                Debug.WriteLine("Settings retrieved.");
-
                 var matches = await GetMatchesAsync(settings.GenderCategory);
-                Debug.WriteLine($"Matches retrieved: {matches.Count()} matches found.");
 
                 TeamStatistics? stat = null;
 
@@ -75,13 +71,11 @@ namespace DAL.Repos
                     if (match.HomeTeam?.Country == country && match.HomeTeamStatistics != null)
                     {
                         stat = match.HomeTeamStatistics;
-                        Debug.WriteLine("Home team statistics found.");
                         break;
                     }
                     else if (match.AwayTeam?.Country == country && match.AwayTeamStatistics != null)
                     {
                         stat = match.AwayTeamStatistics;
-                        Debug.WriteLine("Away team statistics found.");
                         break;
                     }
                 }
@@ -92,7 +86,6 @@ namespace DAL.Repos
                     return new HashSet<Player>();
                 }
 
-                Debug.WriteLine("Statistics found. Returning players.");
                 var startingEleven = stat.StartingEleven ?? Enumerable.Empty<Player>();
                 var substitutes = stat.Substitutes ?? Enumerable.Empty<Player>();
 
@@ -103,21 +96,6 @@ namespace DAL.Repos
                 Debug.WriteLine($"Error in GetPlayersForSelectedCountryAsync: {ex.Message}");
                 throw;
             }
-        }
-
-
-
-        public static async Task<ISet<Player>> GetFavouritePlayersAsync()
-        {
-            var settings = await favouriteSettingsRepository.GetSettingsAsync();
-            return settings.FavouritePlayers.ToHashSet();
-        }
-
-        public static async Task SetFavouritePlayersAsync(ISet<Player> players)
-        {
-            var settings = await favouriteSettingsRepository.GetSettingsAsync();
-            settings.FavouritePlayers = players.ToList();
-            await favouriteSettingsRepository.UpdateSettingsAsync(settings);
         }
 
         public static async Task<ISet<TeamEvent>> GetEventsAsync()
@@ -237,13 +215,10 @@ namespace DAL.Repos
 
         public static async Task<FavouriteSettings> GetFavouriteSettingsAsync()
         {
-            //return await favouriteSettingsRepository.GetSettingsAsync();
-
             var favouriteSettings = await favouriteSettingsRepository.GetSettingsAsync();
             if (favouriteSettings == null)
             {
-                // Možete baciti izuzetak ili vratiti zadanu vrijednost, ovisno o tome što želite postići
-                throw new Exception("Favourite settings are not available.");
+                throw new Exception("Favourite settings unavailable.");
             }
 
             return favouriteSettings;

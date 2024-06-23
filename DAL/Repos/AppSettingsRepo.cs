@@ -3,7 +3,9 @@ using DAL.Model.Enums;
 using DAL.Settings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,15 +19,18 @@ namespace DAL.Repos
         {
             if(!File.Exists(SETTINGS_FILE_PATH))
             {
-                var defaultSettings = new List<string>
-                {
-                    $"{SettingsType.Repository}:{LoadingDataBy.FILE}",
-                    $"{SettingsType.Language}:{Language.ENGLISH}",
-                    $"{SettingsType.Championship}:{GenderCategory.MEN}",
-                    $"{SettingsType.Resolution}:{Resolution.FULLSCREEN}"
-                };            
-                
-                await File.WriteAllLinesAsync(SETTINGS_FILE_PATH, defaultSettings);
+                 var appSettings = new AppSettings();
+
+                 var defaultSettings = new List<string>
+                 {
+                     $"{SettingsType.Repository}:{LoadingDataBy.API}",
+                     $"{SettingsType.Language}:{Language.ENGLISH}",
+                     $"{SettingsType.Championship}:{GenderCategory.MEN}",
+                     $"{SettingsType.Resolution}:{Resolution.FULLSCREEN}"
+                 };            
+
+                 await File.WriteAllLinesAsync(SETTINGS_FILE_PATH, defaultSettings);
+
                 return true;
             }
             return false;
@@ -34,6 +39,9 @@ namespace DAL.Repos
         public async Task<AppSettings> GetSettingsAsync()
         {
             await CreateSettingsAsync();
+
+            //var appSettings = new AppSettings();
+            //await UpdateSettingsAsync(appSettings);
 
             var data = await File.ReadAllLinesAsync(SETTINGS_FILE_PATH);
 
@@ -49,7 +57,7 @@ namespace DAL.Repos
         }
 
         public async Task UpdateSettingsAsync(AppSettings appSettings)
-        {
+        {            
             await CreateSettingsAsync(); // if they don't exist
 
             var updatedSettings = new List<string>
@@ -60,7 +68,7 @@ namespace DAL.Repos
                 $"{SettingsType.Resolution}:{appSettings.Resolution}"
             };
 
-            await File.WriteAllLinesAsync(SETTINGS_FILE_PATH, updatedSettings);
+            File.WriteAllLines(SETTINGS_FILE_PATH, updatedSettings);
         }
     }
 }

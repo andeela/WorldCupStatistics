@@ -13,5 +13,7 @@ namespace DAL.Settings
         public GenderCategory GenderCategory { get; set; }
         public LoadingDataBy LoadingDataBy { get; set; }
         public Resolution Resolution { get; set; }
+
+        public FavouriteSettings FavouriteSettings { get; set; }
     }
 }

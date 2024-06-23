@@ -13,7 +13,7 @@ namespace DAL.Repos
     public class RepoFactory
     {
         public static ISettingsRepo GetSettingsRepo() => new AppSettingsRepo();
-        public static IFavSettingsRepo GetFavSettingsRepo() => new FavSettingsRepo();
+       public static IFavSettingsRepo GetFavSettingsRepo() => new FavSettingsRepo();
 
         public static async Task<IDataRepo> GetDataRepoAsync()
         {
@@ -31,8 +31,8 @@ namespace DAL.Repos
             }
             else { throw new InvalidOperationException("Invalid repo type."); }
         }
-
-        public static IDataRepo GetJsonDataRepo() => new JsonDataRepo(GenderCategory.MEN); // !! prominit - koristit enum
+        private static readonly AppSettings appSettings;
+        public static IDataRepo GetJsonDataRepo() => new JsonDataRepo(appSettings.GenderCategory); 
         public static IDataRepo GetApiRepo() => new ApiDataRepo();
         public static IPlayerIconRepo GetPlayerIconRepo() => new PlayerIconRepo();
     }

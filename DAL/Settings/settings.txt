@@ -1,4 +1,4 @@
-Repository:FILE
+Repository:API
 Language:ENGLISH
 Championship:MEN
 Resolution:FULLSCREEN

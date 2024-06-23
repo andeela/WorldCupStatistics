@@ -1,0 +1,4 @@
+Ivan STRINIC,C:\Users\anđela\Pictures\leemur.png
+Luka MODRIC,C:\Users\anđela\Pictures\modric.jpg
+Ivan RAKITIC,C:\Users\anđela\Pictures\leemur_nervous.png
+Agustina BARROSO,C:\Users\anđela\Pictures\leemur_nervous.png

@@ -9,7 +9,6 @@ namespace DAL
     public class Utilities
     {
         public const char DELIMITER = ':';
-        public const string DELIMITER_LIST = ",";
 
         public static async Task<T> ReadJsonFileAsync<T>(string path)
         {
@@ -109,7 +108,7 @@ namespace DAL
 
         public static TEnum ParseEnumValue<TEnum>(string line) where TEnum : struct
         {
-            var parts = line.Split(':');
+            var parts = line.Split(DELIMITER);
             if (parts.Length != 2)
             {
                 throw new FormatException($"Invalid setting format: {line}");
@@ -136,14 +135,19 @@ namespace DAL
 
         public static string[] GetValuesFromLine(string line)
         {
-            int delimiterIndex = line.IndexOf(DELIMITER);
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                throw new ArgumentException("The line is null or empty.");
+            }
+
+            int delimiterIndex = line.IndexOf(Environment.NewLine);
             if (delimiterIndex == -1 || delimiterIndex == line.Length - 1)
             {
-                throw new ArgumentException("The line does not contain a valid delimiter or value.");
+                throw new ArgumentException($"The line '{line}' does not contain a valid delimiter or value.");
             }
 
             string valuesPart = line.Substring(delimiterIndex + 1).Trim();
-            return valuesPart.Split(DELIMITER_LIST);
+            return valuesPart.Split(Environment.NewLine);
         }
     }
 }

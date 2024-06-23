@@ -11,7 +11,5 @@ namespace DAL.Settings
     {
         public NationalTeam FavouriteTeam { get; set; }
         public IList<Player> FavouritePlayers { get; set; }
-
-        public override string ToString() => FavouriteTeam.ToString() + " - " + FavouritePlayers.ToString();
     }
 }

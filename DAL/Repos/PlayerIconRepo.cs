@@ -37,5 +37,12 @@ namespace DAL.Repos
             var lines = iconPaths.Select(kvp => $"{kvp.Key},{kvp.Value}").ToList();
             await File.WriteAllLinesAsync(ICON_PATH_FILE, lines);
         }
+
+        public async void SavePlayerIconPath(string playerName, string imagePath)
+        {
+            var iconPaths = await GetAllIconPathsAsync();
+            iconPaths[playerName] = imagePath;
+            await SaveAllIconsAsync(iconPaths);
+        }
     }
 }
