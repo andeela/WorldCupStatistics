@@ -1,31 +1,19 @@
-﻿using DAL.Repos;
-using Microsoft.VisualBasic.ApplicationServices;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WorldCupForms;
+using DAL.Model;
+using DAL.Repos;
 
 namespace WorldCupWPF
 {
-    /// <summary>
-    /// Interaction logic for PlayerControlWPF.xaml
-    /// </summary>
-    
     public partial class PlayerControlWPF : UserControl
     {
-        private const string DEFAULT_ICON = "C:/Users/anđela/source/repos/OOP.NET/WorldCupStatistics/DAL/Images/jersey.png"; // change to relative and figure out why is it working only when path's absolute
+        private const string DEFAULT_ICON = "/Images/playerIcon.png";
+        private PlayerWindow currentPlayerWindow;
 
         public static readonly DependencyProperty PlayerNameProperty =
             DependencyProperty.Register("PlayerName", typeof(string), typeof(PlayerControlWPF), new PropertyMetadata(""));
@@ -36,11 +24,13 @@ namespace WorldCupWPF
         public static readonly DependencyProperty ImagePathProperty =
             DependencyProperty.Register("ImagePath", typeof(string), typeof(PlayerControlWPF), new PropertyMetadata(DEFAULT_ICON, OnImagePathChanged));
 
+        public static readonly DependencyProperty CountryProperty =
+            DependencyProperty.Register("Country", typeof(NationalTeam), typeof(PlayerControlWPF), new PropertyMetadata(null));
+
         public string PlayerName
         {
             get { return (string)GetValue(PlayerNameProperty); }
             set { SetValue(PlayerNameProperty, value); }
-
         }
 
         public int ShirtNumber
@@ -55,17 +45,64 @@ namespace WorldCupWPF
             set { SetValue(ImagePathProperty, value); }
         }
 
+        public NationalTeam Country
+        {
+            get { return (NationalTeam)GetValue(CountryProperty); }
+            set { SetValue(CountryProperty, value); }
+        }
+
         public PlayerControlWPF()
         {
             InitializeComponent();
-            DataContext = this; 
+            DataContext = this;
+            MouseLeftButtonUp += OnPlayerSelected;
         }
 
-        public PlayerControlWPF(string playerName, int shirtNumber)
+        public PlayerControlWPF(string playerName, int shirtNumber, NationalTeam country)
             : this()
         {
             PlayerName = playerName;
             ShirtNumber = shirtNumber;
+            Country = country;
+        }
+
+        private async void OnPlayerSelected(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                var parentWindow = Window.GetWindow(this);
+                if (parentWindow != null)
+                {
+                    var playerData = await DataFactory.GetPlayerDataForSelectedCountryAsync(Country.Country);
+
+                    if (playerData.TryGetValue(PlayerName, out var ranking))
+                    {
+                        if (currentPlayerWindow == null || currentPlayerWindow.tbPlayerName != tbPlayerName)
+                        {
+                            OpenPlayerDetailWindow(ranking);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error handling player selection: {ex.Message}");
+            }
+        }
+
+        private void OpenPlayerDetailWindow(PlayerRanking ranking)
+        {
+            currentPlayerWindow?.Close(); // Close existing window if open
+
+            currentPlayerWindow = new PlayerWindow(PlayerName, ShirtNumber, ImagePath, ranking.Goals, ranking.YellowCards);
+            currentPlayerWindow.Closed += PlayerDetailsWindow_Closed; // Handle window closed event
+            currentPlayerWindow.ShowDialog();
+        }
+
+        private void PlayerDetailsWindow_Closed(object sender, EventArgs e)
+        {
+            currentPlayerWindow.Closed -= PlayerDetailsWindow_Closed; // Remove event handler
+            currentPlayerWindow = null; // Clear reference to current window
         }
 
         private static void OnImagePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -83,12 +120,10 @@ namespace WorldCupWPF
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"error loading image: {ex.Message}");
+                    Debug.WriteLine($"Error loading image: {ex.Message}");
                     playerControl.imgPlayer.Source = new BitmapImage(new Uri(DEFAULT_ICON, UriKind.RelativeOrAbsolute));
                 }
             }
         }
     }
-
 }
-

@@ -10,6 +10,14 @@
         Width="800"
         FontSize="14"
         FontFamily="Cambria Math">
+    <Window.Resources>
+        <Storyboard x:Key="PlayerPopOutAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
+                             From="0.0" To="0.2" Duration="0:0:0.15" AutoReverse="True"/>
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
+                             From="0.0" To="0.2" Duration="0:0:0.15" AutoReverse="True"/>
+        </Storyboard>
+    </Window.Resources>
     <Grid Margin="20 10" MaxWidth="600" Width="auto">
         <Frame x:Name="MainContentFrame" NavigationUIVisibility="Hidden"/>
     </Grid>

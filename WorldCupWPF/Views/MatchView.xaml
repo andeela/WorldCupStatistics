@@ -22,7 +22,7 @@
             HorizontalAlignment="Center"
             />
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 20 0 0" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 30 0 0" HorizontalAlignment="Center">
             <Button 
                 Content="..." 
                 x:Name="btnAboutStartingTeam"
@@ -31,27 +31,26 @@
             <ComboBox 
                 x:Name="cbStartingTeam"
                 Margin="5 0"
+                FontSize="16"
+                Padding="7"
                 SelectionChanged="cbStartingTeam_SelectionChanged"/>
             <TextBlock Text="VS" FontSize="24" FontWeight="Bold" Margin="5 0"/>
             <ComboBox 
                 x:Name="cbOpponentTeam"
-                Margin="5 0"
+                Margin="5 0 0 0"
+                FontSize="16"
+                Padding="7"
                 DisplayMemberPath="Country"
                 SelectedValuePath="Country"
                 SelectionChanged="cbOpponents_SelectionChanged"/>
-            <Button 
-                Content="..."
-                Margin="5 0"/>
         </StackPanel>
         <TextBlock
             Grid.Row="2" 
             x:Name="tbResult"
-            FontSize="32" 
+            FontSize="46" 
             FontWeight="Bold"
-            Margin="0 20 0 0"
+            Margin="0 40 0 0"
             HorizontalAlignment="Center"
         />
-        <!--ispisi rezultat u fomatu x : y -->
-                  
     </Grid>
 </UserControl>

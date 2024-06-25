@@ -26,11 +26,9 @@ namespace WorldCupWPF
         {
             InitializeComponent();
 
-            // Navigate to StartingView.xaml when MainWindow loads
             MainContentFrame.Navigate(new Uri("Views/StartingView.xaml", UriKind.Relative));
         }
 
-        // Method to navigate to MatchView.xaml
         public void NavigateToMatchView()
         {
             MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative));
@@ -47,7 +45,7 @@ namespace WorldCupWPF
             int goalsReceived = team.GoalsAgainst.Value;
             int goalDifference = team.GoalDifferential.Value;
 
-            startingElevenView.LoadData(startingEleven, team.Country, opponent.Country, wins, loses, draws, goalsScored, goalsReceived, goalDifference);
+            startingElevenView.LoadData(startingEleven, team, opponent.Country, wins, loses, draws, goalsScored, goalsReceived, goalDifference);
 
             this.Content = startingElevenView;
         }

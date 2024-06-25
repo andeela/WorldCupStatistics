@@ -34,9 +34,9 @@ namespace WorldCupWPF.Views
             _playerIconRepo = new PlayerIconRepo();
         }
 
-        public void LoadData(List<Player> startingEleven, string nationalTeam, string opponent, int wins, int loses, int draws, int goalsScored, int goalsReceived, int goalDifference)
+        public void LoadData(List<Player> startingEleven, NationalTeam nationalTeam, string opponent, int wins, int loses, int draws, int goalsScored, int goalsReceived, int goalDifference)
         {
-            tbNationalTeam.Text = $"{nationalTeam} - all around stats";
+            tbNationalTeam.Text = $"{nationalTeam.Country} - all around stats";
             tbWins.Text = $"Wins: {wins}";
             tbLoses.Text = $"Losses: {loses}";
             tbDraws.Text = $"Draws: {draws}";
@@ -50,7 +50,7 @@ namespace WorldCupWPF.Views
 
             var formation = DetermineFormation(startingEleven);
 
-            ArrangePlayers(startingEleven, formation);
+            ArrangePlayers(startingEleven, formation, nationalTeam);
         }
 
         private string DetermineFormation(List<Player> players)
@@ -62,43 +62,37 @@ namespace WorldCupWPF.Views
             return $"{defenders}-{midfield}-{forward}";
         }
 
-        private async void ArrangePlayers(List<Player> players, string formation)
+        private async void ArrangePlayers(List<Player> players, string formation, NationalTeam nationalTeam)
         {
             var iconPaths = await _playerIconRepo.GetAllIconPathsAsync();
 
-            // Clear previous players
             gridStartingEleven.Children.Clear();
 
-            // Place the goalie
             var goalie = players.FirstOrDefault(p => p.Position == "Goalie");
             if (goalie != null)
             {
-                PlayerControlWPF goalieControl = new PlayerControlWPF(goalie.Name, goalie.ShirtNumber);
-                Grid.SetColumn(goalieControl, 0);  // Goalie is placed in the first row
-                Grid.SetRow(goalieControl, 2);  // Goalie is placed in the third column
+                PlayerControlWPF goalieControl = new PlayerControlWPF(goalie.Name, goalie.ShirtNumber, nationalTeam);
+                Grid.SetColumn(goalieControl, 0);  // first row
+                Grid.SetRow(goalieControl, 2);  // third column
                 gridStartingEleven.Children.Add(goalieControl);
             }
             else
             {
-                Debug.WriteLine("No goalie found in the starting eleven.");
-                return;  // If no goalie is found, exit the method
+                return;
             }
 
-            // Define position mappings for each player type
             Dictionary<string, Point[]> positionMappings = new Dictionary<string, Point[]>
             {
                 { "Defender", new Point[] { new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3), new Point(1, 4) } },
-                { "Midfield", new Point[] {/* new Point(2, 0),*/ new Point(2, 1), new Point(2, 2), new Point(2, 3), /*new Point(2, 4),
-                                    new Point(3, 0),*/ new Point(3, 1), new Point(3, 2), new Point(3, 3)/*, new Point(3, 4)*/ } },
+                { "Midfield", new Point[] { new Point(2, 1), new Point(2, 2), new Point(2, 3), new Point(3, 1), new Point(3, 2), new Point(3, 3) } },
                 { "Forward", new Point[] { new Point(4, 0), new Point(4, 1), new Point(4, 2), new Point(4, 3), new Point(4, 4) } }
+                // todo: reorder them a bit
             };
 
-            // Create lists to hold players by position
             List<Player> defenders = players.Where(p => p.Position == "Defender").ToList();
             List<Player> midfielders = players.Where(p => p.Position == "Midfield").ToList();
             List<Player> forwards = players.Where(p => p.Position == "Forward").ToList();
 
-            // Method to place players in the grid
             void PlacePlayers(List<Player> playersList, Point[] positions)
             {
                 for (int i = 0; i < playersList.Count && i < positions.Length; i++)
@@ -108,7 +102,8 @@ namespace WorldCupWPF.Views
                     {
                         PlayerName = player.Name,
                         ShirtNumber = player.ShirtNumber,
-                        ImagePath = iconPaths.ContainsKey(player.Name) ? iconPaths[player.Name] : null
+                        ImagePath = iconPaths.ContainsKey(player.Name) ? iconPaths[player.Name] : null,
+                        Country = nationalTeam
                     };
                     Grid.SetColumn(playerControl, (int)positions[i].X);
                     Grid.SetRow(playerControl, (int)positions[i].Y);
@@ -116,11 +111,11 @@ namespace WorldCupWPF.Views
                 }
             }
 
-            // Place players based on their position
             PlacePlayers(defenders, positionMappings["Defender"]);
             PlacePlayers(midfielders, positionMappings["Midfield"]);
             PlacePlayers(forwards, positionMappings["Forward"]);
         }
+
 
         private void OnBtnGoBackClick(object sender, EventArgs e)
         {

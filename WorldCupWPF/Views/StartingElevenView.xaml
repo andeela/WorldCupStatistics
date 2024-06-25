@@ -31,7 +31,6 @@
                     Grid.Column="1"
                     Content="←"
                     FontSize="20"
-                    Background="Transparent"
                     BorderThickness="0"
                     Click="OnBtnGoBackClick" 
                     HorizontalAlignment="Right"
@@ -65,7 +64,7 @@
         <Viewbox Grid.Row="3" Margin="10, 0" HorizontalAlignment="Center" Width="575">
             <Grid x:Name="gridStartingEleven" Width="1200" Height="800">
                 <Grid.Background>
-                    <ImageBrush ImageSource="C:\Users\anđela\source\repos\OOP.NET\WorldCupStatistics\DAL\Images\field4.png"/>
+                    <ImageBrush ImageSource="/Images/field.png" />
                 </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />

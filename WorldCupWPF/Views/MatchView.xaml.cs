@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using DAL.Model;
 using DAL.Repos;
 using DAL.Settings;
@@ -36,7 +37,7 @@ namespace WorldCupWPF.Views
                     return;
                 }
 
-                teams = (await DataFactory.GetNationalTeamsAsync(settings.GenderCategory)).ToList(); // Adjust GenderCategory as needed
+                teams = (await DataFactory.GetNationalTeamsAsync(settings.GenderCategory)).ToList(); 
                 var favTeam = teams.FirstOrDefault(t => t.Country == favTeamName);
 
                 if (favTeam == null)
@@ -73,8 +74,8 @@ namespace WorldCupWPF.Views
             }
 
             cbOpponentTeam.ItemsSource = opponents;
-            cbOpponentTeam.DisplayMemberPath = "Country"; // Ensure the ComboBox displays the country name
-            cbOpponentTeam.SelectedValuePath = "Country"; // Ensure the ComboBox uses the country name for selection
+            cbOpponentTeam.DisplayMemberPath = "Country";
+            cbOpponentTeam.SelectedValuePath = "Country"; 
         }
 
         private async void cbStartingTeam_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -120,8 +121,16 @@ namespace WorldCupWPF.Views
                 {
                     result = $"{match.AwayTeam.Goals} : {match.HomeTeam.Goals}";
                 }
+
+                // animating result
+                DoubleAnimation fadeInAnimation = new DoubleAnimation();
+                fadeInAnimation.From = 0.0;
+                fadeInAnimation.To = 1.0;
+                fadeInAnimation.Duration = TimeSpan.FromSeconds(0.5); 
+
+                tbResult.BeginAnimation(TextBlock.OpacityProperty, fadeInAnimation);
+
                 tbResult.Text = result;
-                Debug.WriteLine($"Result: {result}");
             }
             else
             {
@@ -192,6 +201,5 @@ namespace WorldCupWPF.Views
                 Debug.WriteLine($"Error retrieving starting eleven: {ex.Message}");
             }
         }
-
     }
 }
