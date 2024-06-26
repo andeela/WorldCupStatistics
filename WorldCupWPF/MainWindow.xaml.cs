@@ -1,18 +1,7 @@
-﻿using System.Text;
+﻿using DAL.Model;
+using System;
+using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DAL;
-using DAL.Model;
-using DAL.Repos;
-using DAL.Settings;
-using Newtonsoft.Json.Linq;
 using WorldCupWPF.Views;
 
 namespace WorldCupWPF
@@ -25,7 +14,6 @@ namespace WorldCupWPF
         public MainWindow()
         {
             InitializeComponent();
-
             MainContentFrame.Navigate(new Uri("Views/StartingView.xaml", UriKind.Relative));
         }
 
@@ -37,7 +25,7 @@ namespace WorldCupWPF
         public void NavigateToStartingElevenView(List<Player> startingEleven, NationalTeam team, Team opponent)
         {
             StartingElevenView startingElevenView = new StartingElevenView();
-            
+
             int wins = team.Wins.Value;
             int loses = team.Losses.Value;
             int draws = team.Draws.Value;

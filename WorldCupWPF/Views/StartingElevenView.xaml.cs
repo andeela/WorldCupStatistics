@@ -4,26 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WorldCupForms;
-using DAL;
-
 
 namespace WorldCupWPF.Views
 {
-    /// <summary>
-    /// Interaction logic for StartingElevenView.xaml
-    /// </summary>
     public partial class StartingElevenView : UserControl
     {
         private readonly PlayerIconRepo _playerIconRepo;
@@ -36,7 +21,7 @@ namespace WorldCupWPF.Views
 
         public void LoadData(List<Player> startingEleven, NationalTeam nationalTeam, string opponent, int wins, int loses, int draws, int goalsScored, int goalsReceived, int goalDifference)
         {
-            tbNationalTeam.Text = $"{nationalTeam.Country} - all around stats";
+            tbNationalTeam.Text = $"{nationalTeam.Country}";
             tbWins.Text = $"Wins: {wins}";
             tbLoses.Text = $"Losses: {loses}";
             tbDraws.Text = $"Draws: {draws}";
@@ -86,7 +71,6 @@ namespace WorldCupWPF.Views
                 { "Defender", new Point[] { new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3), new Point(1, 4) } },
                 { "Midfield", new Point[] { new Point(2, 1), new Point(2, 2), new Point(2, 3), new Point(3, 1), new Point(3, 2), new Point(3, 3) } },
                 { "Forward", new Point[] { new Point(4, 0), new Point(4, 1), new Point(4, 2), new Point(4, 3), new Point(4, 4) } }
-                // todo: reorder them a bit
             };
 
             List<Player> defenders = players.Where(p => p.Position == "Defender").ToList();
@@ -116,8 +100,7 @@ namespace WorldCupWPF.Views
             PlacePlayers(forwards, positionMappings["Forward"]);
         }
 
-
-        private void OnBtnGoBackClick(object sender, EventArgs e)
+        private void OnBtnGoBackClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow != null)

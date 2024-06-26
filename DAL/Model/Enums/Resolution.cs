@@ -9,8 +9,7 @@ namespace DAL.Model.Enums
     public enum Resolution
     {
         FULLSCREEN, 
-        /*r1920x1000,
-        r1600x1200,*/
-        r720x480
+        r1280x720,
+        r1024x768
     }
 }

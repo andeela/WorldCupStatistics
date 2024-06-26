@@ -24,25 +24,35 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0 30 0 0" HorizontalAlignment="Center">
             <Button 
-                Content="..." 
+                Content="about" 
                 x:Name="btnAboutStartingTeam"
+                Background="PowderBlue"
                 Click="btnAboutStartingTeam_Click" >
             </Button>
             <ComboBox 
                 x:Name="cbStartingTeam"
                 Margin="5 0"
                 FontSize="16"
-                Padding="7"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
                 SelectionChanged="cbStartingTeam_SelectionChanged"/>
             <TextBlock Text="VS" FontSize="24" FontWeight="Bold" Margin="5 0"/>
             <ComboBox 
                 x:Name="cbOpponentTeam"
                 Margin="5 0 0 0"
                 FontSize="16"
-                Padding="7"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
                 DisplayMemberPath="Country"
                 SelectedValuePath="Country"
                 SelectionChanged="cbOpponents_SelectionChanged"/>
+            <Button 
+                Content="settings" 
+                x:Name="btnSettings"
+                Background="PowderBlue"
+                Margin="5 0 0 0"
+                Click="OnSettingsButtonClick" >
+            </Button>
         </StackPanel>
         <TextBlock
             Grid.Row="2" 

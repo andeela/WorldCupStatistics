@@ -1,7 +1,7 @@
 ﻿using DAL.Interfaces;
+using DAL.Model.Enums;
 using DAL.Repos;
 using DAL.Settings;
-using DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,63 +14,75 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DAL.Model.Enums;
+using WorldCupWPF.Views;
 
-namespace WorldCupWPF.Views
+namespace WorldCupWPF
 {
     /// <summary>
-    /// Interaction logic for StartingView.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class StartingView : UserControl
+    public partial class SettingsWindow : Window
     {
-        private readonly ISettingsRepo settingsRepo;
+        private ISettingsRepo settingsRepo;
+        private AppSettings currentSettings;
 
-        public StartingView()
+        public event EventHandler SettingsApplied;
+
+        public SettingsWindow()
         {
             InitializeComponent();
-            settingsRepo = new AppSettingsRepo();
 
-            LoadSettings();
+            settingsRepo = new AppSettingsRepo();
+            LoadSettingsAsync();
         }
 
-        private async void LoadSettings()
+        private async void LoadSettingsAsync()
         {
-            AppSettings settings = await settingsRepo.GetSettingsAsync();
+            currentSettings = await settingsRepo.GetSettingsAsync();
 
-            if (settings != null) 
+            cbGenderCategory.SelectedIndex = currentSettings.GenderCategory == GenderCategory.MEN ? 0 : 1;
+            cbLanguage.SelectedIndex = currentSettings.Language == DAL.Model.Enums.Language.ENGLISH ? 0 : 1;
+        }
+
+        private async void OnApplyButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.NavigateToMatchView();
-                }
-            }
-            else
-            {
-                // makni visak - pribaci loadSettings u matchView ili promini nacin 
-                // trenutno postavke za gender category i langugage ne rade nista lol samo se ucitaju u combobox 
-                // ali ok je jer se svakako ucitaju postavke postavljenje ili defaultne iz winformsa
-                cbGenderCategory.SelectedIndex = settings.GenderCategory == GenderCategory.MEN ? 0 : 1;
-                cbLanguage.SelectedIndex = settings.Language == DAL.Model.Enums.Language.ENGLISH ? 0 : 1;
+                bool genderCategoryChanged = currentSettings.GenderCategory != (cbGenderCategory.SelectedIndex == 0 ? GenderCategory.MEN : GenderCategory.WOMEN);
+
+                currentSettings.GenderCategory = cbGenderCategory.SelectedIndex == 0 ? GenderCategory.MEN : GenderCategory.WOMEN;
+                currentSettings.Language = cbLanguage.SelectedIndex == 0 ? DAL.Model.Enums.Language.ENGLISH : DAL.Model.Enums.Language.CROATIAN;
+
+                await settingsRepo.UpdateSettingsAsync(currentSettings);
+
                 string selectedResolution = (cbResolution.SelectedItem as ComboBoxItem)?.Content.ToString();
-                
+
                 switch (selectedResolution)
                 {
-                    case "FULLSCREEN":
-                        SetFullScreen(true);
-                        break;
-                    case "r1280x720":
+                    case "1280x720":
                         SetWindowSize(1280, 720);
                         break;
-                    case "r1024x768":
+                    case "1024x768":
                         SetWindowSize(1024, 768);
+                        break;
+                    case "FULLSCREEN":
+                        SetFullScreen(true);
                         break;
                     default:
                         SetFullScreen(false);
                         break;
                 }
+
+                MessageBox.Show("Settings applied successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                SettingsApplied?.Invoke(this, EventArgs.Empty);
+
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -98,15 +110,6 @@ namespace WorldCupWPF.Views
                 Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
             }
         }
-
-        private void OnNextButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-            if (mainWindow != null)
-            {
-                mainWindow.NavigateToMatchView();
-            }
-        }
-
     }
 }
+

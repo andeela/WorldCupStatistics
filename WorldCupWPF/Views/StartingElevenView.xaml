@@ -24,26 +24,28 @@
             <TextBlock 
                 x:Name="tbNationalTeam"
                 Grid.Column="0"
+                Margin="0 30 0 0"
                 FontSize="24"
                 HorizontalAlignment="Center" />
 
             <Button x:Name="btnGoBack"
                     Grid.Column="1"
                     Content="←"
-                    FontSize="20"
-                    BorderThickness="0"
+                    FontSize="10"
+                    FontWeight="ExtraBold"
+                    Height="30"
+                    Margin=" 0 30 0 0"
                     Click="OnBtnGoBackClick" 
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    />
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center" />
         </Grid>
 
-        <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,15">
+        <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="100 0 150 0">
+            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="100 0 100 5">
                 <TextBlock x:Name="tbWins" Text="Wins: "/>
                 <TextBlock x:Name="tbLoses" Text="Loses: "/>
                 <TextBlock x:Name="tbDraws" Text="Draws: "/>
@@ -62,7 +64,7 @@
             TextDecorations="Underline" Margin="0 0 0 5"/>
 
         <Viewbox Grid.Row="3" Margin="10, 0" HorizontalAlignment="Center" Width="575">
-            <Grid x:Name="gridStartingEleven" Width="1200" Height="800">
+            <Grid x:Name="gridStartingEleven" Width="1400" Height="auto">
                 <Grid.Background>
                     <ImageBrush ImageSource="/Images/field.png" />
                 </Grid.Background>

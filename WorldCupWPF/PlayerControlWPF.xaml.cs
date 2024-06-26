@@ -95,14 +95,14 @@ namespace WorldCupWPF
             currentPlayerWindow?.Close(); // Close existing window if open
 
             currentPlayerWindow = new PlayerWindow(PlayerName, ShirtNumber, ImagePath, ranking.Goals, ranking.YellowCards);
-            currentPlayerWindow.Closed += PlayerDetailsWindow_Closed; // Handle window closed event
+            currentPlayerWindow.Closed += PlayerDetailsWindow_Closed; 
             currentPlayerWindow.ShowDialog();
         }
 
         private void PlayerDetailsWindow_Closed(object sender, EventArgs e)
         {
-            currentPlayerWindow.Closed -= PlayerDetailsWindow_Closed; // Remove event handler
-            currentPlayerWindow = null; // Clear reference to current window
+            currentPlayerWindow.Closed -= PlayerDetailsWindow_Closed; 
+            currentPlayerWindow = null; 
         }
 
         private static void OnImagePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

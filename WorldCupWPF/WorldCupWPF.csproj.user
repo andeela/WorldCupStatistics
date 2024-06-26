@@ -13,6 +13,9 @@
     <Compile Update="PlayerWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="SettingsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\MatchView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="PlayerWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SettingsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MatchView.xaml">

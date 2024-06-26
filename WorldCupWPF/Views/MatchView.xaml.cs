@@ -201,5 +201,17 @@ namespace WorldCupWPF.Views
                 Debug.WriteLine($"Error retrieving starting eleven: {ex.Message}");
             }
         }
+
+        private void OnSettingsButtonClick(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.SettingsApplied += SettingsWindow_SettingsApplied;
+            settingsWindow.ShowDialog();
+        }
+
+        private void SettingsWindow_SettingsApplied(object? sender, EventArgs e)
+        {
+            LoadFavoriteTeam();
+        }
     }
 }

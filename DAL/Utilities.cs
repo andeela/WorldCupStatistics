@@ -149,5 +149,6 @@ namespace DAL
             string valuesPart = line.Substring(delimiterIndex + 1).Trim();
             return valuesPart.Split(Environment.NewLine);
         }
+
     }
 }
