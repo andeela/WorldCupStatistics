@@ -56,18 +56,24 @@ namespace WorldCupWPF
 
                 await settingsRepo.UpdateSettingsAsync(currentSettings);
 
-                string selectedResolution = (cbResolution.SelectedItem as ComboBoxItem)?.Content.ToString();
-
-                switch (selectedResolution)
+                //string selectedResolution = (cbResolution.SelectedItem as ComboBoxItem)?.Content.ToString();
+                Resolution resolutionEnum;
+                if (!Enum.TryParse(cbResolution.SelectedValue.ToString(), out resolutionEnum))
                 {
-                    case "1280x720":
+                    SetFullScreen(false);
+                    return;
+                }
+
+                switch (resolutionEnum)
+                {
+                    case Resolution.FULLSCREEN:
+                        SetFullScreen(true);
+                        break;
+                    case Resolution.r1280x720:
                         SetWindowSize(1280, 720);
                         break;
-                    case "1024x768":
+                    case Resolution.r1024x768:
                         SetWindowSize(1024, 768);
-                        break;
-                    case "FULLSCREEN":
-                        SetFullScreen(true);
                         break;
                     default:
                         SetFullScreen(false);

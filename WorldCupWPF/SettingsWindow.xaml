@@ -73,6 +73,8 @@
                 Grid.Row="1"
                 HorizontalAlignment="Left"
                 Margin="0 7 0 0" 
+                SelectedValuePath="Content"
+                DisplayMemberPath="Content"
                 SelectedIndex="{Binding ResolutionIndex, Mode=TwoWay}">
                 <ComboBoxItem>FULLSCREEN</ComboBoxItem>
                 <ComboBoxItem>r1280x720</ComboBoxItem>
