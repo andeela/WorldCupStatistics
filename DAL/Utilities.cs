@@ -70,41 +70,39 @@ namespace DAL
 
         }
 
-        private static readonly Dictionary<string, Model.Enums.Language> LanguageTagMap = new()
+        private static readonly Dictionary<string, Model.Enums.Language> LanguageComboBoxMap = new()
         {
-            { "hr-HR", Model.Enums.Language.CROATIAN },
-            { "en-US", Model.Enums.Language.ENGLISH }
+            { "Croatian", Model.Enums.Language.CROATIAN },
+            { "English", Model.Enums.Language.ENGLISH }
         };
 
-        private static readonly Dictionary<Model.Enums.Language, string> LanguageSettingsMap = new()
+        public static AppSettings SetLanguageByComboBoxSelection(AppSettings settings, string selectedLanguage)
         {
-            { Model.Enums.Language.CROATIAN, "hr-HR" },
-            { Model.Enums.Language.ENGLISH, "en-US" }
-        };
-
-        public static AppSettings SetLanguageByTag(AppSettings settings, string tag)
-        {
-            if (LanguageTagMap.TryGetValue(tag, out var language))
+            if (LanguageComboBoxMap.TryGetValue(selectedLanguage, out var language))
             {
                 settings.Language = language;
             }
             else
             {
-                throw new ArgumentException($"Invalid language tag: {tag}", nameof(tag));
+                throw new ArgumentException($"Invalid language selection: {selectedLanguage}", nameof(selectedLanguage));
             }
 
             return settings;
         }
 
-        public static string GetLanguageFromSettings(AppSettings settings)
+        public static string GetComboBoxSelectionFromSettings(AppSettings settings)
         {
-            if (LanguageSettingsMap.TryGetValue(settings.Language, out var tag))
+            foreach (var pair in LanguageComboBoxMap)
             {
-                return tag;
+                if (pair.Value == settings.Language)
+                {
+                    return pair.Key;
+                }
             }
 
             throw new InvalidOperationException($"Invalid language setting: {settings.Language}");
         }
+
 
         public static TEnum ParseEnumValue<TEnum>(string line) where TEnum : struct
         {
