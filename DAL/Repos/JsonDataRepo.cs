@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repos
 {
-    public class JsonDataRepo : IDataRepo
+    internal class JsonDataRepo : IDataRepo
     {
         private const string FOLDER_PATH = @"..\..\..\..\DAL\JsonData";
         private readonly string _matchesPath;

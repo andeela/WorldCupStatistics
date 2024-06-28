@@ -25,19 +25,17 @@ namespace WorldCupWPF.Views
     /// </summary>
     public partial class StartingView : UserControl
     {
-        private readonly ISettingsRepo settingsRepo;
+        public static ISettingsRepo settingsRepo = RepoFactory.GetSettingsRepo();
 
         public StartingView()
         {
             InitializeComponent();
-            settingsRepo = new AppSettingsRepo();
-
             LoadSettings();
         }
 
         private async void LoadSettings()
         {
-            AppSettings settings = await settingsRepo.GetSettingsAsync();
+            var settings = await settingsRepo.GetSettingsAsync();
 
             if (settings != null) 
             {
@@ -107,6 +105,5 @@ namespace WorldCupWPF.Views
                 mainWindow.NavigateToMatchView();
             }
         }
-
     }
 }

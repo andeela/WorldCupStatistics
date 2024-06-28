@@ -1,4 +1,5 @@
 ﻿using DAL;
+using DAL.Interfaces;
 using DAL.Repos;
 using DAL.Settings;
 using System;
@@ -9,6 +10,8 @@ namespace WorldCupForms
 {
     public class PlayerControl : UserControl
     {
+        public static IPlayerIconRepo playerIconRepo = RepoFactory.GetPlayerIconRepo();
+
         public string PlayerName { get; private set; }
         public string Position { get; private set; }
         public int ShirtNumber { get; private set; }
@@ -136,8 +139,7 @@ namespace WorldCupForms
 
         private void SavePlayerIconPath()
         {
-            var iconRepo = new PlayerIconRepo();
-            iconRepo.SavePlayerIconPath(PlayerName, ImagePath);
+            playerIconRepo.SavePlayerIconPath(PlayerName, ImagePath);
         }
 
         private void ReorderPlayerControls(Panel panel)

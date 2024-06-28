@@ -1,4 +1,5 @@
-﻿using DAL.Model;
+﻿using DAL.Interfaces;
+using DAL.Model;
 using DAL.Repos;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ namespace WorldCupWPF.Views
 {
     public partial class StartingElevenView : UserControl
     {
-        private readonly PlayerIconRepo _playerIconRepo;
+        //private readonly PlayerIconRepo _playerIconRepo;
+        public static IPlayerIconRepo playerIconRepo = RepoFactory.GetPlayerIconRepo();
 
         public StartingElevenView()
         {
             InitializeComponent();
-            _playerIconRepo = new PlayerIconRepo();
+            //_playerIconRepo = new PlayerIconRepo();
         }
 
         public void LoadData(List<Player> startingEleven, NationalTeam nationalTeam, string opponent, int wins, int loses, int draws, int goalsScored, int goalsReceived, int goalDifference)
@@ -49,7 +51,7 @@ namespace WorldCupWPF.Views
 
         private async void ArrangePlayers(List<Player> players, string formation, NationalTeam nationalTeam)
         {
-            var iconPaths = await _playerIconRepo.GetAllIconPathsAsync();
+            var iconPaths = await playerIconRepo.GetAllIconPathsAsync();
 
             gridStartingEleven.Children.Clear();
 

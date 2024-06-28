@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace DAL.Repos
 {
-    public class DataFactory
+    public static class DataFactory
     {
         private static readonly Lazy<Task<IDataRepo>> dataRepository
             = new Lazy<Task<IDataRepo>>(() => RepoFactory.GetDataRepoAsync()); 

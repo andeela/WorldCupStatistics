@@ -28,28 +28,21 @@ namespace WorldCupWPF.Views
         private async void LoadFavoriteTeam()
         {
             var settings = await DataFactory.GetAppSettingsAsync();
+            string favTeamName = File.Exists(FAV_TEAM_FILE) ? File.ReadAllText(FAV_TEAM_FILE).Trim() : string.Empty;
 
             try
             {
-                string favTeamName = File.ReadAllText(FAV_TEAM_FILE).Trim();
-                if (string.IsNullOrEmpty(favTeamName))
-                {
-                    return;
-                }
-
-                teams = (await DataFactory.GetNationalTeamsAsync(settings.GenderCategory)).ToList(); 
+                teams = (await DataFactory.GetNationalTeamsAsync(settings.GenderCategory)).ToList();
                 var favTeam = teams.FirstOrDefault(t => t.Country == favTeamName);
-
-                if (favTeam == null)
-                {
-                    return;
-                }
 
                 cbStartingTeam.ItemsSource = teams;
                 cbStartingTeam.DisplayMemberPath = "Country";
                 cbStartingTeam.SelectedItem = favTeam;
 
-                await LoadOpponents(favTeam.Country);
+                if (favTeam != null)
+                {
+                    await LoadOpponents(favTeam.Country);
+                }
             }
             catch (Exception ex)
             {
@@ -67,15 +60,14 @@ namespace WorldCupWPF.Views
                                    .Distinct()
                                    .ToList();
 
-            Debug.WriteLine($"Opponents count for {favoriteTeam}: {opponents.Count}");
-            foreach (var opponent in opponents)
-            {
-                Debug.WriteLine($"Opponent: {opponent.Country}");
-            }
-
             cbOpponentTeam.ItemsSource = opponents;
             cbOpponentTeam.DisplayMemberPath = "Country";
-            cbOpponentTeam.SelectedValuePath = "Country"; 
+            cbOpponentTeam.SelectedValuePath = "Country";
+
+            if (!opponents.Any())
+            {
+                cbOpponentTeam.SelectedIndex = -1;
+            }
         }
 
         private async void cbStartingTeam_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -88,53 +80,35 @@ namespace WorldCupWPF.Views
 
         private void cbOpponents_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Debug.WriteLine("cbOpponents_SelectionChanged triggered");
-
             var startingTeam = cbStartingTeam.SelectedItem as NationalTeam;
-            if (startingTeam == null)
-            {
-                Debug.WriteLine("cbStartingTeam.SelectedItem is null or not of type NationalTeam");
-                return;
-            }
-
             var opponentTeam = cbOpponentTeam.SelectedItem as Team;
-            if (opponentTeam == null)
+
+            if (startingTeam != null && opponentTeam != null)
             {
-                Debug.WriteLine("cbOpponentTeam.SelectedItem is null or not of type Team");
-                return;
-            }
+                var match = matches.FirstOrDefault(m =>
+                    (m.HomeTeam.Country == startingTeam.Country && m.AwayTeam.Country == opponentTeam.Country) ||
+                    (m.HomeTeam.Country == opponentTeam.Country && m.AwayTeam.Country == startingTeam.Country));
 
-            Debug.WriteLine($"Starting team: {startingTeam.Country}, Opponent team: {opponentTeam.Country}");
-
-            var match = matches.FirstOrDefault(m =>
-                (m.HomeTeam.Country == startingTeam.Country && m.AwayTeam.Country == opponentTeam.Country) ||
-                (m.HomeTeam.Country == opponentTeam.Country && m.AwayTeam.Country == startingTeam.Country));
-
-            if (match != null)
-            {
-                string result;
-                if (match.HomeTeam.Country == startingTeam.Country)
+                if (match != null)
                 {
-                    result = $"{match.HomeTeam.Goals} : {match.AwayTeam.Goals}";
+                    string result = match.HomeTeam.Country == startingTeam.Country
+                        ? $"{match.HomeTeam.Goals} : {match.AwayTeam.Goals}"
+                        : $"{match.AwayTeam.Goals} : {match.HomeTeam.Goals}";
+
+                    DoubleAnimation fadeInAnimation = new DoubleAnimation
+                    {
+                        From = 0.0,
+                        To = 1.0,
+                        Duration = TimeSpan.FromSeconds(0.5)
+                    };
+
+                    tbResult.BeginAnimation(TextBlock.OpacityProperty, fadeInAnimation);
+                    tbResult.Text = result;
                 }
                 else
                 {
-                    result = $"{match.AwayTeam.Goals} : {match.HomeTeam.Goals}";
+                    tbResult.Text = "Match not found";
                 }
-
-                // animating result
-                DoubleAnimation fadeInAnimation = new DoubleAnimation();
-                fadeInAnimation.From = 0.0;
-                fadeInAnimation.To = 1.0;
-                fadeInAnimation.Duration = TimeSpan.FromSeconds(0.5); 
-
-                tbResult.BeginAnimation(TextBlock.OpacityProperty, fadeInAnimation);
-
-                tbResult.Text = result;
-            }
-            else
-            {
-                Debug.WriteLine("match == null");
             }
         }
 
@@ -143,15 +117,9 @@ namespace WorldCupWPF.Views
             var startingTeam = cbStartingTeam.SelectedItem as NationalTeam;
             var opponentTeam = cbOpponentTeam.SelectedItem as Team;
 
-            if (startingTeam == null)
+            if (startingTeam == null || opponentTeam == null)
             {
-                Debug.WriteLine("No starting team selected.");
-                return;
-            }
-
-            if (opponentTeam == null)
-            {
-                Debug.WriteLine("No opponent selected.");
+                MessageBox.Show("Select both Teams.", "Hey!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -159,42 +127,17 @@ namespace WorldCupWPF.Views
                 (m.HomeTeam.Country == startingTeam.Country && m.AwayTeam.Country == opponentTeam.Country) ||
                 (m.HomeTeam.Country == opponentTeam.Country && m.AwayTeam.Country == startingTeam.Country));
 
-            if (match == null)
-            {
-                Debug.WriteLine("No match found for the selected teams.");
-                return;
-            }
-
-            Debug.WriteLine($"Match found: {match.HomeTeam.Country} vs {match.AwayTeam.Country}");
-
             try
             {
                 var settings = await DataFactory.GetAppSettingsAsync();
                 var teams = await DataFactory.GetNationalTeamsAsync(settings.GenderCategory);
 
-                if (startingTeam == null)
-                {
-                    Debug.WriteLine("Starting team not found in the teams list.");
-                    return;
-                }
-
                 var startingEleven = match?.HomeTeam?.Country == startingTeam.Country
                     ? match?.HomeTeamStatistics?.StartingEleven
                     : match?.AwayTeamStatistics?.StartingEleven;
 
-                if (startingEleven == null)
-                {
-                    Debug.WriteLine("Starting eleven not available for the selected match.");
-                    return;
-                }
-
-                Debug.WriteLine("Starting eleven retrieved successfully.");
-
                 MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.NavigateToStartingElevenView(startingEleven, startingTeam, opponentTeam);
-                }
+                mainWindow?.NavigateToStartingElevenView(startingEleven, startingTeam, opponentTeam);
             }
             catch (Exception ex)
             {
@@ -204,12 +147,12 @@ namespace WorldCupWPF.Views
 
         private void OnSettingsButtonClick(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settingsWindow = new SettingsWindow();
+            var settingsWindow = new SettingsWindow();
             settingsWindow.SettingsApplied += SettingsWindow_SettingsApplied;
             settingsWindow.ShowDialog();
         }
 
-        private void SettingsWindow_SettingsApplied(object? sender, EventArgs e)
+        private void SettingsWindow_SettingsApplied(object sender, EventArgs e)
         {
             LoadFavoriteTeam();
         }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repos
 {
-    public class FavSettingsRepo : IFavSettingsRepo
+    internal class FavSettingsRepo : IFavSettingsRepo
     {
         private const string SETTINGS_TEAM_FILE_PATH = @"..\..\..\..\DAL\Settings\fav_teams";
         private const string SETTINGS_PLAYERS_FILE_PATH = @"..\..\..\..\DAL\Settings\fav_players.txt";

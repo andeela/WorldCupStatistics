@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DAL.Interfaces;
 using DAL.Model;
 using DAL.Repos;
 using DAL.Settings;
@@ -16,6 +17,8 @@ namespace WorldCupForms
     {
         private const string FAV_PLAYERS = @"..\..\..\..\DAL\Settings\fav_players.txt";
         private const string FAV_TEAM = @"..\..\..\..\DAL\Settings\fav_team";
+        public static IFavSettingsRepo favSettingsRepo = RepoFactory.GetFavSettingsRepo();
+        public static IPlayerIconRepo playerIconRepo = RepoFactory.GetPlayerIconRepo();
 
         public FavTeamForm()
         {            
@@ -122,9 +125,6 @@ namespace WorldCupForms
 
         private async Task LoadPlayers(NationalTeam selectedTeam)
         {
-            var favSettings = new FavouriteSettings();
-            var favSettingsRepo = new FavSettingsRepo();
-
             try
             {
                 var countryName = selectedTeam.Country;
@@ -137,8 +137,7 @@ namespace WorldCupForms
                 }
 
                 var favPlayers = LoadFavouritePlayers();
-                var iconRepo = new PlayerIconRepo();
-                var iconPaths = await iconRepo.GetAllIconPathsAsync();
+                var iconPaths = await playerIconRepo.GetAllIconPathsAsync();
 
                 pnlFavPlayers.Controls.Clear();
                 pnlFavTeam.Controls.Clear();

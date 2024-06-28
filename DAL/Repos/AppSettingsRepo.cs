@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repos
 {
-    public class AppSettingsRepo : ISettingsRepo
+    internal class AppSettingsRepo : ISettingsRepo
     {
         private const string SETTINGS_FILE_PATH = @"..\..\..\..\DAL\Settings\settings.txt";
         

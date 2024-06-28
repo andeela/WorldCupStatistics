@@ -10,10 +10,10 @@
     <Compile Update="PlayerControlWPF.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="PlayerWindow.xaml.cs">
+    <Compile Update="Windows\PlayerWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="SettingsWindow.xaml.cs">
+    <Compile Update="Windows\SettingsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MatchView.xaml.cs">
@@ -33,10 +33,10 @@
     <Page Update="PlayerControlWPF.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="PlayerWindow.xaml">
+    <Page Update="Windows\PlayerWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="SettingsWindow.xaml">
+    <Page Update="Windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MatchView.xaml">

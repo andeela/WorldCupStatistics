@@ -10,10 +10,10 @@ using System.Data.SqlTypes;
 
 namespace DAL.Repos
 {
-    public class RepoFactory
+    public static class RepoFactory
     {
         public static ISettingsRepo GetSettingsRepo() => new AppSettingsRepo();
-       public static IFavSettingsRepo GetFavSettingsRepo() => new FavSettingsRepo();
+        public static IFavSettingsRepo GetFavSettingsRepo() => new FavSettingsRepo();
 
         public static async Task<IDataRepo> GetDataRepoAsync()
         {

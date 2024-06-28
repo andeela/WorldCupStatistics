@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace DAL.Repos
 {
-    public class ApiDataRepo : IDataRepo
+    internal class ApiDataRepo : IDataRepo
     {
         private const string URLBASE = "https://worldcup-vua.nullbit.hr";
         private readonly HttpClient _httpClient;

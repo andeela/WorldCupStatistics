@@ -1,4 +1,4 @@
 Repository:API
-Language:CROATIAN
+Language:ENGLISH
 Championship:MEN
-Resolution:FULLSCREEN
+Resolution:r1280x720

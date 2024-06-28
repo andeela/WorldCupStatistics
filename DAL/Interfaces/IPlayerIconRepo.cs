@@ -10,5 +10,6 @@ namespace DAL.Interfaces
     {
         Task<Dictionary<string, string>> GetAllIconPathsAsync();
         Task SaveAllIconsAsync(IDictionary<string, string> iconPaths);
+        void SavePlayerIconPath(string playerName, string imagePath);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repos
 {
-    public class PlayerIconRepo : IPlayerIconRepo
+    internal class PlayerIconRepo : IPlayerIconRepo
     {
         private const string ICON_PATH_FILE = @"..\..\..\..\DAL\Images\iconPaths.txt";
 
