@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using WorldCupWPF.Views;
 
 namespace WorldCupWPF
@@ -11,15 +12,22 @@ namespace WorldCupWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private UserControl currentView;
+
         public MainWindow()
         {
             InitializeComponent();
-            MainContentFrame.Navigate(new Uri("Views/StartingView.xaml", UriKind.Relative));
+            MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative)); 
+            // MainContentFrame.Navigate(new Uri("Views/StartingView.xaml", UriKind.Relative)); 
+
         }
 
         public void NavigateToMatchView()
         {
-            MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative));
+            //MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative));
+            MatchView matchView = new MatchView();
+            this.Content = matchView;
+            currentView = matchView;
         }
 
         public void NavigateToStartingElevenView(List<Player> startingEleven, NationalTeam team, Team opponent)

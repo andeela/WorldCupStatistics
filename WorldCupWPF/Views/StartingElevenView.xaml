@@ -12,7 +12,6 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <!-- Ensure space for the field -->
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Stretch" Margin="0 0 0 15">
