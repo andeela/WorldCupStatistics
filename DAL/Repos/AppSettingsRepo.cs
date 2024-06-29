@@ -40,9 +40,6 @@ namespace DAL.Repos
         {
             await CreateSettingsAsync();
 
-            //var appSettings = new AppSettings();
-            //await UpdateSettingsAsync(appSettings);
-
             var data = await File.ReadAllLinesAsync(SETTINGS_FILE_PATH);
 
             var settings = new AppSettings

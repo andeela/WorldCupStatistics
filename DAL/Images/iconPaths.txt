@@ -3,4 +3,5 @@ Luka MODRIC,C:\Users\anđela\Pictures\modric.jpg
 Ivan RAKITIC,C:\Users\anđela\Pictures\leemur_nervous.png
 Agustina BARROSO,C:\Users\anđela\Pictures\leemur_nervous.png
 Ivan PERISIC,C:\Users\anđela\Pictures\leemur_nervous.png
-Sime VRSALJKO,C:\Users\anđela\Pictures\scotland\000018740037_20A.jpg
+Sime VRSALJKO,C:\Users\anđela\Pictures\vrsaljko.jpg
+Andrej KRAMARIC,C:\Users\anđela\Pictures\scotland\000018740002_00A.jpg

@@ -18,13 +18,10 @@ namespace WorldCupWPF
         {
             InitializeComponent();
             MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative)); 
-            // MainContentFrame.Navigate(new Uri("Views/StartingView.xaml", UriKind.Relative)); 
-
         }
 
         public void NavigateToMatchView()
         {
-            //MainContentFrame.Navigate(new Uri("Views/MatchView.xaml", UriKind.Relative));
             MatchView matchView = new MatchView();
             this.Content = matchView;
             currentView = matchView;

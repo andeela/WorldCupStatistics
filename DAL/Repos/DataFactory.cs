@@ -122,18 +122,17 @@ namespace DAL.Repos
 
         public static async Task<ISet<Match>> GetMatchDataForSelectedCountryAsync()
         {
-            var dataRepoInstance = await dataRepository.Value; // Await the Lazy<Task<IDataRepo>> to get the IDataRepo instance
-            var settings = await settingsRepository.GetSettingsAsync(); // Get the current app settings
+            var dataRepoInstance = await dataRepository.Value; 
+            var settings = await settingsRepository.GetSettingsAsync(); 
             var favSettings = await GetFavouriteSettingsAsync();
 
             if (favSettings != null && favSettings.FavouriteTeam != null && favSettings.FavouriteTeam.FifaCode != null)
             {
-                var favTeamFifaCode = favSettings.FavouriteTeam.FifaCode; // Get the favourite team's FIFA code
+                var favTeamFifaCode = favSettings.FavouriteTeam.FifaCode; 
                 return await dataRepoInstance.GetMatchDataByCountry(settings.GenderCategory, favTeamFifaCode);
             }
             else
             {
-                // Handle the case where favSettings, favSettings.FavouriteTeam, or favSettings.FavouriteTeam.FifaCode is null
                 throw new Exception("Favourite team or FIFA code is not available.");
             }
         }
@@ -143,7 +142,6 @@ namespace DAL.Repos
         {
             var allPlayersData = await GetAllPlayerRankingDataAsync();
             var nededPlayersData = new Dictionary<string, PlayerRanking>();
-            //var choosenTeamName = (await GetFavouriteSettingsAsync()).FavouriteTeam.Country;
             var countryTeamPlayerNames = new HashSet<string>();
 
             var settings = await settingsRepository.GetSettingsAsync();

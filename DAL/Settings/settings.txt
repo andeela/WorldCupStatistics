@@ -1,4 +1,4 @@
 Repository:API
 Language:CROATIAN
-Championship:MEN
+Championship:WOMEN
 Resolution:r1280x720

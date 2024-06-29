@@ -13,8 +13,5 @@
     <Compile Update="Forms\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\StartingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
